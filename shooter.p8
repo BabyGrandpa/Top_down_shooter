@@ -6,6 +6,7 @@ __lua__
 --
 
 
+<<<<<<< HEAD
 function _init()
 	s()
 end
@@ -29,6 +30,16 @@ function _draw()
 
 
 
+=======
+
+function s()
+	t="hejsa"
+end
+
+function o()
+
+end
+>>>>>>> 14f4a4b405326aaa1cbff94824457c278a09fc9c
 
 
 __gfx__
