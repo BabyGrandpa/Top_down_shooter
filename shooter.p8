@@ -7,7 +7,16 @@ __lua__
 
 -->8
 --
+--
+--
 
+
+function s()
+	t="hejsa"
+end
+
+function o()
+end
 
 
 __gfx__
