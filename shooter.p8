@@ -11,29 +11,13 @@ __lua__
 --
 
 
-<<<<<<< HEAD
-function _init()
-	s()
-end
 
-
-
-function _update()
-
-
-end
-
-
-function _draw()
-	print(t)
-
-=======
 function s()
 	t="hejsa"
 end
 
 function o()
->>>>>>> 24861aa360306a77407d500438aa11e43870f57b
+
 end
 
 
