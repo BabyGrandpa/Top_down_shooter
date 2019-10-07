@@ -90,13 +90,16 @@ function collide_map(obj,aim,flag)
 		x2=x 		y2=y+h-1	
 	
 	elseif aim=="right" then
-	
+		x1=x+w			y1=y
+		x2=x+w+1	y2=y+h-1
 	
 	elseif aim=="up" then
-	
+		x1=x+1			y1=y-1
+		x2=x+w-1	y2=y
 	
 	elseif aim=="down" then
-
+		x1=x			y1=y+h
+		x2=x+w	y2=y+h
 	
 	end
 
