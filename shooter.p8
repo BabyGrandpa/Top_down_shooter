@@ -7,7 +7,26 @@ __lua__
 
 -->8
 --
+--
+--
 
+
+function _init()
+	s()
+end
+
+
+
+function _update()
+
+
+end
+
+
+function _draw()
+	print(t)
+
+end
 
 
 __gfx__
