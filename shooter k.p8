@@ -21,6 +21,7 @@ end
 
 function _draw()
 	cls()
+	print(x.."/"..y,0,0)
 	spr(39,stat(32)-1,stat(33)-1)
 	spr(38,64,64)
 	if cursora == true then
@@ -52,16 +53,16 @@ end
 function move()
 
 	if btnp(⬆️) then
-		y+=8
+		y+=2
 	end
 	if btnp(⬇️) then
-		y-=8
+		y-=2
 	end
 	if btnp(⬅️) then
-		x+=8
+		x+=2
 	end
 	if btnp(➡️) then
-		x-=8
+		x-=2
 	end
 
 end
