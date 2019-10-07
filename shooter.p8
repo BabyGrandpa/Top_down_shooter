@@ -2,16 +2,10 @@ pico-8 cartridge // http://www.pico-8.com
 version 18
 __lua__
 --
-
-
-
--->8
---
 --
 --
 
 
-<<<<<<< HEAD
 function _init()
 	s()
 end
@@ -27,14 +21,14 @@ end
 function _draw()
 	print(t)
 
-=======
-function s()
-	t="hejsa"
-end
 
-function o()
->>>>>>> 24861aa360306a77407d500438aa11e43870f57b
-end
+-->8
+--
+--
+--
+
+
+
 
 
 __gfx__
