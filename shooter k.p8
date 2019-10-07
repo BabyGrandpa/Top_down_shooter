@@ -15,18 +15,17 @@ end
 
 function _update()
 	move()
-
+	
+	block()
 end
 
 
 function _draw()
 	cls()
 	print(x.."/"..y,0,0)
-	spr(39,stat(32)-1,stat(33)-1)
-	spr(38,64,64)
-	if cursora == true then
-		print("hej")
-	end
+	spr(39,64,64)
+	spr(38,xc,yc)
+ spr(39,stat(32)-1,stat(33)-1)
 
 	map(0,0,x,y,50,50)
 end
@@ -44,29 +43,69 @@ end
 
 
 function s()
-	t="hejsa"
 	x=64
-	y=64
+	y=-40
+	xc=64
+	yc=64
+	placed=true
+	placer=true
+	placeu=true
+ placel=true
 	cursora=false
 end
 
 function move()
 
-	if btnp(⬆️) then
-		y+=2
+	if btnp(⬆️) and placeu == true then
+		y+=8
 	end
-	if btnp(⬇️) then
-		y-=2
+	if btnp(⬇️) and placed == true then
+		y-=8
 	end
-	if btnp(⬅️) then
-		x+=2
+	if btnp(⬅️) and placel == true then
+		x+=8
 	end
-	if btnp(➡️) then
-		x-=2
+	if btnp(➡️) and placer == true then
+		x-=8
 	end
-
+	
 end
+	
+function block()
 
+	if x >= 48 or -280 >= x then
+	 placed=true
+	elseif y == 56 or y == -256 then
+	 placed=false
+	else
+	 placed=true
+	end
+	
+	if y >= 56 or -256 > y or y >= 56 then
+	 placer=true
+	elseif x == 48 and y != -40 and y != -48 or x == -272 then
+	 placer=false
+	else
+	 placer=true
+	end
+	
+	if x >= 48 or -280 >= x then
+	 placeu=true
+	elseif y == -264 or y == 48 then
+	 placeu=false
+	else
+	 placeu=true
+	end
+	
+	if y <= -264 or 56 <= y or y == -40 and x != -280 or y == -48 and  x != -280 then
+	 placel=true
+	elseif x == -280 or x == 40 then
+	 placel=false
+	else
+	 placel=true
+	end
+	
+end  
 
 
 --
