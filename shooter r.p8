@@ -8,8 +8,10 @@ __lua__
 
 function _init()
  poke(0x5f2d, 1)
- s()
+ xmap=stat(32)
+ ymap=stat(33)
  collide_map()
+ s()
 end
 
 
@@ -17,15 +19,20 @@ end
 function _update()
 	move()
 	collide_map()
+--	block()
+	camera(cx,cy)
 end
 
 
 function _draw()
 	cls()
+	print(x.."/"..y,cx,cy)
 	spr(39,64,64)
-	spr(38,64,64)
+	spr(38,x,y)
+	spr(39,stat(32)-1,stat(33)-1)
 
-	map(0,0,x,y,46,42)
+
+	map(0,0,0,0,46,42)
 end
 
 
@@ -43,26 +50,72 @@ end
 function s()
 	x=64
 	y=64
+	xc=64
+	yc=64
+	cx=0
+	cy=0
+	placed=true
+	placer=true
+	placeu=true
+ placel=true
 end
 
 function move()
 
-	if btnp(⬆️) then
-		y+=8
-	end
-	if btnp(⬇️) then
+	if btnp(⬆️) and placeu == true then
 		y-=8
+		cy-=8
 	end
-	if btnp(⬅️) then
-		x+=8
+	if btnp(⬇️) and placed == true then
+		y+=8
+		cy+=8
 	end
-	if btnp(➡️) then
+	if btnp(⬅️) and placel == true then
 		x-=8
+		cx-=8
 	end
-
+	if btnp(➡️) and placer == true then
+		x+=8
+		cx+=8
+	end
+	
 end
 
+function block()
 
+	if x >= 48 or -280 >= x then
+	 placed=true
+	elseif y == 64 or y == -256 then
+	 placed=false
+	else
+	 placed=true
+	end
+	
+	if y >= 56 or -256 > y or y >= 56 then
+	 placer=true
+	elseif x == 56 and y != -40 and y != -48 or x == -272 then
+	 placer=false
+	else
+	 placer=true
+	end
+	
+	if x >= 48 or -280 >= x then
+	 placeu=true
+	elseif y == -264 or y == 48 then
+	 placeu=false
+	else
+	 placeu=true
+	end
+	
+	if y <= -264 or 56 <= y or y == -40 and x != -280 or y == -48 and  x != -280 then
+	 placel=true
+	elseif x == -280 or x == 40 then
+	 placel=false
+	else
+	 placel=true
+	end
+	
+end  
 
 --
 --
@@ -90,24 +143,29 @@ function collide_map(obj,aim,flag)
 		x2=x 		y2=y+h-1	
 	
 	elseif aim=="right" then
-	
+		x1=x+w			y1=y
+		x2=x+w+1	y2=y+h-1
 	
 	elseif aim=="up" then
-	
+		x1=x+1			y1=y-1
+		x2=x+w-1	y2=y
 	
 	elseif aim=="down" then
-
-	
+		x1=x			y1=y+h
+		x2=x+w	y2=y+h
 	end
 
+--pixels to tiles
+	x1/=8		y1/=8
+	x2/=8  y2/=8
 	
 	if fget(mget(x1,y1),0)
 	or fget(mget(x1,y2),0)
 	or fget(mget(x2,y1),0)
 	or fget(mget(x2,y2),0) then
-		return false
-	else 
 		return true
+	else 
+		return false
 	end
 
 
@@ -197,7 +255,7 @@ __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000000000000000000000000000000000000
 __gff__
-0000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000003000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __map__
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
