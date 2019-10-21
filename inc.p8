@@ -20,13 +20,13 @@ function _update()
 	move2(dirx[1],diry[1])
 	collide_map()
 --	block()
-	camera(cx,cy)
+	camera(cx*8,cy*8)
 end
 
 
 function _draw()
 	cls()
-	print(x*8 .."/".. y*8,cx,cy)
+	print(x*8 .."/".. y*8,cx*8,cy*8)
 	spr(39,64,64)
 	spr(38,x*8,y*8)
 	spr(39,stat(32)-1,stat(33)-1)
@@ -50,8 +50,8 @@ end
 function s()
 	x=8
 	y=8
-	xc=64
-	yc=64
+	xc=8
+	yc=8
 	cx=0
 	cy=0
 	placed=true
@@ -91,6 +91,8 @@ function move(dx,dy)
    local dx,dy=dirx[i+1],diry[i+1]
    x+=dx
    y+=dy
+   cx+=dx
+   cy+=dy
    p_sox,p_soy=-dx*8,-dy*8
    p_ox,p_oy=p_sox,p_soy
    p_t=0
@@ -100,22 +102,7 @@ function move(dx,dy)
 
 		
 
-		if btnp(⬆️) and placeu == true then
-		--	y-=1
-			cy-=8
-		end
-		if btnp(⬇️) and placed == true then
-	--		y+=1
-			cy+=8
-		end
-		if btnp(⬅️) and placel == true then
-	--		x-=1
-			cx-=8
-		end
-		if btnp(➡️) and placer == true then
-		--	x+=1
-			cx+=8
-		end	
+	
 	end
 end
 
