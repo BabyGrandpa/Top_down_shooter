@@ -10,6 +10,7 @@ function _init()
  poke(0x5f2d, 1)
  xmap=stat(32)
  ymap=stat(33)
+
  collide_map()
  s()
 end
@@ -21,15 +22,17 @@ function _update()
 	collide_map()
 --	block()
 	camera(cx*8,cy*8)
+	mousef=stat(32)-1
+ mousef2=stat(33)-1
 end
 
 
 function _draw()
 	cls()
 	print(x*8 .."/".. y*8,cx*8,cy*8)
-	spr(39,64,64)
+
 	spr(38,x*8,y*8)
-	spr(39,stat(32)-1,stat(33)-1)
+	spr(39,mousef+mx*8,mousef2+my*8)
 
 
 	map()
@@ -54,6 +57,8 @@ function s()
 	yc=8
 	cx=0
 	cy=0
+	mx=0
+	my=0
 	placed=true
 	placer=true
 	placeu=true
@@ -73,7 +78,7 @@ end
 
 
 function move(dx,dy)
- local destx,desy=x+dx,y+dy
+ local destx,desy=x+dx,y
 	local wall=mget(destx,desty)
 
 	if fget(wall,0) then
@@ -93,6 +98,8 @@ function move(dx,dy)
    y+=dy
    cx+=dx
    cy+=dy
+   mx+=dx
+   my+=dy
    p_sox,p_soy=-dx*8,-dy*8
    p_ox,p_oy=p_sox,p_soy
    p_t=0
