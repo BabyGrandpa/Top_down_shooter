@@ -10,34 +10,32 @@ function _init()
  poke(0x5f2d, 1)
  xmap=stat(32)
  ymap=stat(33)
- cwall()
+
+ collide_map()
  s()
- l()
 end
 
 
 
 function _update()
-	move()
+	move2(dirx[1],diry[1])
+	collide_map()
 --	block()
-	camera(cx,cy)
-	cwall()
-	l()
+	camera(cx*8,cy*8)
 	mousef=stat(32)-1
-	mousef2=stat(33)-1
-	testdf()	
+ mousef2=stat(33)-1
 end
 
 
 function _draw()
 	cls()
-	
-	print(x.."/"..y,cx,cy)
-	spr(38,x,y)
-	spr(39,mousef+mx,mousef2+my)
- spr(22,aimx1,aimy1)
-	map(0,0,0,0,46,42)
-	print(cwall(),cx,cy+8,2)
+	print(x*8 .."/".. y*8,cx*8,cy*8)
+
+	spr(38,x*8,y*8)
+	spr(39,mousef+mx*8,mousef2+my*8)
+
+
+	map()
 end
 
 
@@ -53,10 +51,10 @@ end
 
 
 function s()
-	x=64
-	y=64
-	xc=64
-	yc=64
+	x=8
+	y=8
+	xc=8
+	yc=8
 	cx=0
 	cy=0
 	mx=0
@@ -65,35 +63,54 @@ function s()
 	placer=true
 	placeu=true
  placel=true
+ dirx={-1,1,0,0}
+ diry={0,0,-1,1}
 end
 
-function move()
+function move2()
+	for i=0,3 do
+		if btnp(i) then 
+			move(dirx[i+1],diry[i+2])
+			return
+		end
+	end
+end
 
-	if btnp(⬆️) and placeu == true then
-		y-=8
-		cy-=8
-		my-=8
-		cwall()
-	end
-	if btnp(⬇️) and placed == true then
-		y+=8
-		cy+=8
-		my+=8
-		cwall()
-	end
-	if btnp(⬅️) and placel == true then
-		x-=8
-		cx-=8
-		mx-=8
-		cwall()
-	end
-	if btnp(➡️) and placer == true then
-		x+=8
-		cx+=8
-		mx+=8
-		cwall()
-	end
+
+function move(dx,dy)
+ local destx,desy=x+dx,y
+	local wall=mget(destx,desty)
+
+	if fget(wall,0) then
+
+	else
+--		for i=0,3 do 
+--			if btnp(i) then
+--				x+=dirx[i+1]
+--				y+=diry[i+1]
+--			end
+--		end
+		
+ for i=0,3 do
+  if btnp(i) then
+   local dx,dy=dirx[i+1],diry[i+1]
+   x+=dx
+   y+=dy
+   cx+=dx
+   cy+=dy
+   mx+=dx
+   my+=dy
+   p_sox,p_soy=-dx*8,-dy*8
+   p_ox,p_oy=p_sox,p_soy
+   p_t=0
+
+  end
+ end
+
+		
+
 	
+	end
 end
 
 function block()
@@ -143,68 +160,24 @@ end
 
 --
 
-function cwall(obj,aim,flag)
-	
-	if btnp(⬅️) or btnp(➡️) or btnp(⬇️) or btnp(⬆️) then
-	 aimx1=(x-8)/8
-	 aimx2=(x-1)/8
-		aimy1=(y)/8
-		aimy2=(y+8)/8
-	end
-	
-	if btnp(➡️) then
-		aimx1=(x+8)/8	
-		aimx2=(x+8+1)/8	
-		aimy1=(y)/8
-		aimy2=(y+8-1)/8
-	
-	elseif btnp(⬆️) then
-		aimx1=(x+1)/8
-		aimx2=(x+8-1)/8
-		aimy1=(y-1)/8
-		aimy2=(y-8)/8
-	
-	elseif btnp(⬇️) then
-		aimx1=(x)/8
-		aimx2=(x+8)/8	
-		aimy1=(y+1)/8
-		aimy2=(y+8)/8
-	end
+function collide_map(obj,aim,flag)
+	--obj = table needs x,y,w,h
+	--local x=obj.x 	local y=obj.y
+	--local w=obj.w  local h=obj.h
 
---pixels to tiles
---	aimx1/=8		
---	aimy1/=8
---	aimx2/=8  
+	local x1=64
+	local w1=8
+	local y1=64
+	local h1=8
 	
-	if fget(mget(aimx1,aimy1),0)
-	or fget(mget(aimx1,aimy2),0)
-	or fget(mget(aimx2,aimy1),0)
-	or fget(mget(aimx2,aimy2),0) then
-		return true
-	else 
+	if fget(38,0) then
 		return false
+	else 
+		return true
 	end
 
 
 end
--->8
-
-function testdf()
-	if cwall() then
-	 print(cwall,cx,cy)
-	end
-
-
-
-
-end
-
-function l()
- obj={x1=64,y1=64,w=8,h=8}
- aimx=x-8
-	aimy=y
-end
-	
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -290,7 +263,7 @@ __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000000000000000000000000000000000000
 __gff__
-0000000000000000000000000000000003000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __map__
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
