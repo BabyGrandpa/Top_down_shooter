@@ -27,16 +27,9 @@ function _draw()
 	cls()
 	map(0,0,0,0,46,42)
 	drawdoor()
-	print(x.."/"..y,cx,cy)
---spr(sp,x,y,w,h,flpx,flpy)
-	spr(38,x,y,1,1,false,false)
+	print(x.."/"..y,cx,cy,2)
+	drawsht()
 	spr(39,mousef+mx,mousef2+my)
- spr(22,aimx1,aimy1)
-	print(cwallleft(),cx,cy+8,2)
-	print(cwallright(),cx,cy+16,2)
-	print(cwallup(),cx,cy+24,2)
-	print(cwalldown(),cx,cy+32,2)
-	print(cdoorup(),cx,cy+40,2)
 end
 
 
@@ -231,6 +224,13 @@ function drawdoor()
 		end
 end
 
+function drawsht()
+	if stat(32) < 64 then
+		spr(38,x,y,1,1,false,false)
+	elseif stat(32) > 63 then
+	 spr(38,x,y,1,1,true,false)
+	end
+end 
 __gfx__
 00000000444444440000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000444444440000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
