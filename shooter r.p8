@@ -11,6 +11,7 @@ function _init()
  xmap=stat(32)
  ymap=stat(33)
  gameinit()
+ bullets = { }
 end
 
 
@@ -20,6 +21,7 @@ function _update()
 	camera(cx,cy)
 	mousef=stat(32)-1
 	mousef2=stat(33)-1
+	timer+=1
 end
 
 
@@ -27,7 +29,7 @@ function _draw()
 	cls()
 	map(0,0,0,0,128,64)
 	drawdoor()
-	print(x.."/"..y,cx,cy,2)
+	print(playerx.."/"..playery,cx,cy,2)
 	drawsht()
 	spr(39,mousef+mx,mousef2+my)
 end
@@ -45,8 +47,8 @@ end
 
 
 function gameinit()
-	x=64
-	y=64
+	playerx=64
+	playery=64
 	speedx=8
 	speedy=8
 	xc=64
@@ -55,15 +57,17 @@ function gameinit()
 	cy=0
 	mx=0
 	my=0
+	doorv=0
+	timer=0
 end
 
 function move()
 
 	if btnp(⬆️,0) then
 		if cwallup() == false then
-			y=y-speedy
-			cy-=8
-			my-=8
+			playery-=speedy
+			cy-=speedy
+			my-=speedy
 		elseif cwallup() == true and btnp(⬆️,0) then
 			sfx(0)
 		end
@@ -71,9 +75,9 @@ function move()
 	
 	if btnp(⬇️,0) then
 		if cwalldown() == false then
-		 y=y+speedy
-		 cy+=8
-		 my+=8
+		 playery+=speedy
+		 cy+=speedy
+		 my+=speedy
 		elseif cwalldown() == true and btnp(⬇️,0) then
 			sfx(0)
 		end
@@ -81,9 +85,9 @@ function move()
 	
 	if btnp(⬅️,0) then
 		if cwallleft() == false then
-			x=x-speedx
-			cx-=8
-			mx-=8
+			playerx-=speedx
+			cx-=speedx
+			mx-=speedx
 		elseif cwallleft() == true and btnp(⬅️,0) then
 			sfx(0)
 		end
@@ -91,9 +95,9 @@ function move()
 	
 	if btnp(➡️,0) then
 		if cwallright() == false then
-			x=x+speedx
-			cx+=8
-			mx+=8
+			playerx+=speedx
+			cx+=speedx
+			mx+=speedx
 		elseif cwallright() == true and btnp(➡️,0) then
 			sfx(0)
 		end
@@ -111,8 +115,8 @@ end
 
 --
 function cwallleft()
-	 aimx=(x-1)/8
-		aimy=(y+4)/8
+	 aimx=(playerx-1)/8
+		aimy=(playery+4)/8
 	
 	if fget(mget(aimx,aimy),0) then
 		return true
@@ -122,8 +126,8 @@ function cwallleft()
 end
 
 function cwallright()
-		aimx=(x+8)/8		
-		aimy=(y+4)/8
+		aimx=(playerx+8)/8		
+		aimy=(playery+4)/8
 
 	if fget(mget(aimx,aimy),0) then
 		return true
@@ -133,8 +137,8 @@ function cwallright()
 end
 
 function cwallup()
-		aimx=(x+4)/8
-		aimy=(y-1)/8
+		aimx=(playerx+4)/8
+		aimy=(playery-1)/8
 
 	if fget(mget(aimx,aimy),0) then
 		return true
@@ -144,8 +148,8 @@ function cwallup()
 end
 
 function cwalldown()
-	aimx=(x+4)/8
-	aimy=(y+8)/8
+	aimx=(playerx+4)/8
+	aimy=(playery+8)/8
 	
 	if fget(mget(aimx,aimy),0) then
 		return true
@@ -155,8 +159,8 @@ function cwalldown()
 end
 
 function cdoorleft()
-	 aimx=(x-1)/8
-		aimy=(y+4)/8
+	 aimx=(playerx-1)/8
+		aimy=(playery+4)/8
 	
 	if fget(mget(aimx,aimy),1) then
 		return true
@@ -166,8 +170,8 @@ function cdoorleft()
 end
 
 function cdoorright()
-		aimx=(x+8)/8		
-		aimy=(y+4)/8
+		aimx=(playerx+8)/8		
+		aimy=(playery+4)/8
 
 	if fget(mget(aimx,aimy),1) then
 		return true
@@ -177,8 +181,8 @@ function cdoorright()
 end
 
 function cdoorup()
-		aimx=(x+4)/8
-		aimy=(y-1)/8
+		aimx=(playerx+4)/8
+		aimy=(playery-1)/8
 
 	if fget(mget(aimx,aimy),1) then
 		return true
@@ -188,8 +192,8 @@ function cdoorup()
 end
 
 function cdoordown()
-	aimx=(x+4)/8
-	aimy=(y+8)/8
+	aimx=(playerx+4)/8
+	aimy=(playery+8)/8
 	
 	if fget(mget(aimx,aimy),1) then
 		return true
@@ -199,8 +203,8 @@ function cdoordown()
 end
 
 function cdoorontop()
-	aimx=(x)/8
-	aimy=(y)/8
+	aimx=(playerx)/8
+	aimy=(playery)/8
 	
 	if fget(mget(aimx,aimy),1) then
 		return true
@@ -211,34 +215,67 @@ end
 -->8
 function drawdoor()
 
- 	if cdoorup() == true then
-			spr(1,x,y-8)
+ 	if cdoorup() == true and doorv==1 then
+			spr(1,playerx,playery-8)
+			doorv=1
+			doorsound()
+		else
+			doorv=0
 		end
 		
-		if cdoordown() == true then
-			spr(1,x,y+8)
+		if cdoordown() == true and doorv==1 then
+			spr(1,playerx,playery+8)
+			doorv=1
+			doorsound()
+		else
+			doorv=0
 		end
 		
 		if cdoorontop() == true then
-			spr(1,x,y)
+			spr(1,playerx,playery)
+			doorsound()
 		end
 		
-		if cdoorleft() == true then
-			spr(1,x-8,y)
+		if cdoorleft() == true and doorv==1 then
+			spr(1,playerx-8,playery)
+			doorv=1
+			doorsound()
+		else
+			doorv=0
 		end
 		
-		if cdoorright() == true then
-			spr(1,x+8,y)
+		if cdoorright() == true and doorv==1 then
+			spr(1,playerx+8,playery)
+			doorv=1
+			doorsound()
+		else
+			doorv=0
 		end
 end
 
 function drawsht()
 	if stat(32) < 64 then
-		spr(38,x,y,1,1,false,false)
+		spr(38,playerx,playery,1,1,false,false)
 	elseif stat(32) > 63 then
-	 spr(38,x,y,1,1,true,false)
+	 spr(38,playerx,playery,1,1,true,false)
 	end
 end 
+
+function doorsound()
+	if timer%10 == 0 then
+		sfx(0)
+	end
+end
+-->8
+-- bullets
+
+function fire()
+	local	b = {     
+		sp = 37,
+		x = player.x
+	}
+	
+end
 __gfx__
 00000000444444444544444444444454555555555555555577766677000000000000000000000000000000000000000000000000000000000000000000000000
 00000000444444444544444444444454555555555555555577766677000000000000000000000000000000000000000000000000000000000000000000000000
