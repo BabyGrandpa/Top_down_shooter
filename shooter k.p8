@@ -20,12 +20,13 @@ function _update()
 	camera(cx,cy)
 	mousef=stat(32)-1
 	mousef2=stat(33)-1
+	timer+=1
 end
 
 
 function _draw()
 	cls()
-	map(0,0,0,0,46,42)
+	map(0,0,0,0)
 	drawdoor()
 	print(x.."/"..y,cx,cy,2)
 --spr(sp,x,y,w,h,flpx,flpy)
@@ -56,6 +57,8 @@ function gameinit()
 	cy=0
 	mx=0
 	my=0
+	doorv=0
+	timer=0
 end
 
 function move()
@@ -212,24 +215,41 @@ end
 -->8
 function drawdoor()
 
- 	if cdoorup() == true then
+ 	if cdoorup() == true and doorv==1 then
 			spr(1,x,y-8)
+			doorv=1
+			doorsound()
+		else
+			doorv=0
 		end
 		
-		if cdoordown() == true then
+		if cdoordown() == true and doorv==1 then
 			spr(1,x,y+8)
+			doorv=1
+			doorsound()
+		else
+			doorv=0
 		end
 		
 		if cdoorontop() == true then
 			spr(1,x,y)
+			doorsound()
 		end
 		
-		if cdoorleft() == true then
+		if cdoorleft() == true and doorv==1 then
 			spr(1,x-8,y)
+			doorv=1
+			doorsound()
+		else
+			doorv=0
 		end
 		
-		if cdoorright() == true then
+		if cdoorright() == true and doorv==1 then
 			spr(1,x+8,y)
+			doorv=1
+			doorsound()
+		else
+			doorv=0
 		end
 end
 
@@ -240,6 +260,12 @@ function drawsht()
 	 spr(38,x,y,1,1,true,false)
 	end
 end 
+
+function doorsound()
+	if timer%10 == 0 then
+		sfx(0)
+	end
+end
 __gfx__
 00000000444444440000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000444444440000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
