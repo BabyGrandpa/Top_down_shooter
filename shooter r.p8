@@ -29,10 +29,20 @@ function _draw()
 	cls()
 	map(0,0,0,0,128,64)
 	drawdoor()
-	print(playerx.."/"..playery,cx,cy,0)
-	print(stat(32).."/"..stat(33),cx,cy+8,0)	
+	print(playerx.."/"..playery,cx,cy,7)
+	print(stat(32).."/"..stat(33),cx,cy+8,7)	
 	drawsht()
 	spr(39,mousex+mx,mousey+my)
+	line(playerx+4,playery+4,mousex+mx+4,mousey+my+4,7)
+ q=(mousey+my-playery)
+ m=(mousex+mx-playerx)
+ l=sqrt(q^2+m^2)
+ adx=3*m/l
+ ady=3*q/l
+ print(q.." , " .. m ,30,60)
+ print(q/m,50,70 )
+ print(l,50,80)
+ print(3*q/l ..", ".. 3*m/l,50,90)
 end
 
 
@@ -275,11 +285,22 @@ function fire()
 		sp = 37,
 		x = playerx,
 		y = playery,
-		dx = mousex(32)+mx,
-		dy = mousey+my
+	--delta y
+ q=(mousey+my-playery),
+ -- delta x
+ m=(mousex+mx-playerx),
+ -- length of dist(player;mouse)
+ l=sqrt(q^2+m^2),
+ --dirx
+ adx=3*m/l,
+ --diry
+ ady=3*q/l
 	}
+	add(bullets,b)
 	
 end
+
+ 
 __gfx__
 00000000444444444544444444444454555555555555555577766677000000000000000000000000000000000000000000000000000000000000000000000000
 00000000444444444544444444444454555555555555555577766677000000000000000000000000000000000000000000000000000000000000000000000000
