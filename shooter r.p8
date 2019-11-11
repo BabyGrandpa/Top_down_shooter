@@ -19,8 +19,8 @@ end
 function _update()
 	move()
 	camera(cx,cy)
-	mousef=stat(32)-1
-	mousef2=stat(33)-1
+	mousex=stat(32)
+	mousey=stat(33)
 	timer+=1
 end
 
@@ -29,9 +29,10 @@ function _draw()
 	cls()
 	map(0,0,0,0,128,64)
 	drawdoor()
-	print(playerx.."/"..playery,cx,cy,2)
+	print(playerx.."/"..playery,cx,cy,0)
+	print(stat(32).."/"..stat(33),cx,cy+8,0)	
 	drawsht()
-	spr(39,mousef+mx,mousef2+my)
+	spr(39,mousex+mx,mousey+my)
 end
 
 
@@ -272,7 +273,10 @@ end
 function fire()
 	local	b = {     
 		sp = 37,
-		x = player.x
+		x = playerx,
+		y = playery,
+		dx = mousex(32)+mx,
+		dy = mousey+my
 	}
 	
 end
