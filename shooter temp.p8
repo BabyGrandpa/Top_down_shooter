@@ -12,6 +12,7 @@ function _init()
  ymap=stat(33)
  gameinit()
  bullets = { }
+ miniupd=move
 end
 
 
@@ -19,9 +20,10 @@ end
 function _update()
 	move()
 	camera(cx,cy)
-	mousef=stat(32)-1
-	mousef2=stat(33)-1
+	mousef=stat(32)
+	mousef2=stat(33)
 	timer+=1
+	miniupd()
 end
 
 
@@ -47,8 +49,11 @@ end
 
 
 function gameinit()
+	p_ani={240,241,242,243}
 	playerx=64
 	playery=64
+	player_ox=0
+	player_oy=0
 	speedx=8
 	speedy=8
 	xc=64
@@ -68,6 +73,8 @@ function move()
 			playery-=speedy
 			cy-=speedy
 			my-=speedy
+			player_oy=8
+			miniupd=playerturn
 		elseif cwallup() == true and btnp(⬆️,0) then
 			sfx(0)
 		end
@@ -103,6 +110,28 @@ function move()
 		end
 	end
 end
+
+function playerturn()
+
+ if player_ox>0 then
+  player_ox-=1
+ end
+ if player_ox<0 then
+  player_ox+=1
+ end
+ if player_oy>0 then
+  player_oy-=1
+ end
+ if player_oy<0 then
+  player_oy+=1
+ end
+ 
+ if player_ox==0 and player_oy==0 then
+  miniupd=move
+ end
+
+end
+
 
 --
 --
@@ -255,7 +284,7 @@ end
 
 function drawsht()
 	if stat(32) < 64 then
-		spr(38,playerx,playery,1,1,false,false)
+		drawspr(getframe(p_ani),playerx*8+player_ox,playery*8+player_oy,10)
 	elseif stat(32) > 63 then
 	 spr(38,playerx,playery,1,1,true,false)
 	end
@@ -275,6 +304,17 @@ function fire()
 		x = player.x
 	}
 	
+end
+-->8
+function getframe(ani)
+ return ani[flr(timer/8)%#ani+1]
+end
+
+function drawspr(_spr,_x,_y,_c)
+ palt(0,false)
+ pal(6,_c)
+ spr(_spr,_x,_y)
+ pal()
 end
 __gfx__
 00000000444444444544444444444454555555555555555577766677000000000000000000000000000000000000000000000000000000000000000000000000
