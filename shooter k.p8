@@ -19,9 +19,11 @@ end
 function _update()
 	move()
 	camera(cx,cy)
-	mousef=stat(32)-1
-	mousef2=stat(33)-1
+	mousex=stat(32)
+	mousey=stat(33)
 	timer+=1
+	shrt+=1
+	game_update()
 end
 
 
@@ -29,9 +31,21 @@ function _draw()
 	cls()
 	map(0,0,0,0,128,64)
 	drawdoor()
-	print(playerx.."/"..playery,cx,cy,2)
+	print(playerx.."/"..playery,cx,cy,7)
+	print(stat(32).."/"..stat(33),cx,cy+8,7)	
 	drawsht()
-	spr(39,mousef+mx,mousef2+my)
+	spr(39,mousex+mx,mousey+my)
+	line(playerx+4,playery+4,mousex+mx+4,mousey+my+4,7)
+ q=(mousey+my-playery)
+ m=(mousex+mx-playerx)
+ l=sqrt(q^2+m^2)
+ adx=3*m/l
+ ady=3*q/l
+ print(q.." , " .. m ,30,60)
+ print(q/m,50,70 )
+ print(l,50,80)
+ print(3*q/l ..", ".. 3*m/l,50,90)
+ game_draw()
 end
 
 
@@ -59,6 +73,7 @@ function gameinit()
 	my=0
 	doorv=0
 	timer=0
+	shrt=0
 end
 
 function move()
@@ -272,8 +287,45 @@ end
 function fire()
 	local	b = {     
 		sp = 37,
-		x = player.x
+		x = playerx,
+		y = playery,
+	
+ 	q=(mousey+my-playery),	--delta y
+	 m=(mousex+mx-playerx), --delta x
+	 l=sqrt(q^2+m^2), -- length of dist(player;mouse)
+	 dx=3*m/l,	--dirx
+	 dy=3*q/l --diry
 	}
+	
+	add(bullets,b)
+	
+end
+
+ 
+-->8
+--game
+function game_init()
+
+end
+
+function game_update()
+ for b in all(bullets) do
+  b.x+=b.dx
+  b.y+=b.dy
+ end
+ 
+ if stat(34) == 1 and shrt >= 10 then
+ 	 fire() 
+ 		shrt=0
+ end
+ 
+end
+
+function game_draw()
+	 
+	for b in all(bullets) do 
+  spr(b.sp,b.x,b.y)
+ end
 	
 end
 __gfx__
@@ -296,7 +348,7 @@ __gfx__
 00000000000000000000000000000000000000000000000000033300000000000000000000000000000000000000000000000000000000000000000000000000
 000000000000000000000000000000000000000000000000003333300aa00aa00000000000000000000000000000000000000000000000000000000000000000
 000000000000000000000000000000000000000000000000000fff000a0000a00000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000011110000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000a99800000011110000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000111101000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000000000000000000000000000000000008f51115f0a0000a00000000000000000000000000000000000000000000000000000000000000000
 000000000000000000000000000000000000000000000000005888050aa00aa00000000000000000000000000000000000000000000000000000000000000000
