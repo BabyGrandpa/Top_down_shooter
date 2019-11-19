@@ -22,6 +22,7 @@ function _update()
 	mousex=stat(32)
 	mousey=stat(33)
 	timer+=1
+	shrt+=1
 	game_update()
 end
 
@@ -72,6 +73,7 @@ function gameinit()
 	my=0
 	doorv=0
 	timer=0
+	shrt=0
 end
 
 function move()
@@ -312,7 +314,9 @@ function game_update()
   b.y+=b.dy
  end
  
- if btnp(4) then fire() 
+ if stat(34) == 1 and shrt >= 10 then
+ 	 fire() 
+ 		shrt=0
  end
  
 end
