@@ -7,45 +7,24 @@ __lua__
 
 
 function _init()
+
  poke(0x5f2d, 1)
- xmap=stat(32)
- ymap=stat(33)
- gameinit()
- bullets = { }
+ game_init()
+ 
 end
 
-
-
 function _update()
-	move()
-	camera(cx,cy)
-	mousex=stat(32)
-	mousey=stat(33)
-	timer+=1
-	shrt+=1
+
 	game_update()
+	timer+=1
+	
 end
 
 
 function _draw()
-	cls()
-	map(0,0,0,0,128,64)
-	drawdoor()
-	print(playerx.."/"..playery,cx,cy,7)
-	print(stat(32).."/"..stat(33),cx,cy+8,7)	
-	drawsht()
-	spr(39,mousex+mx,mousey+my)
-	line(playerx+4,playery+4,mousex+mx+4,mousey+my+4,7)
- q=(mousey+my-playery)
- m=(mousex+mx-playerx)
- l=sqrt(q^2+m^2)
- adx=3*m/l
- ady=3*q/l
- print(q.." , " .. m ,30,60)
- print(q/m,50,70 )
- print(l,50,80)
- print(3*q/l ..", ".. 3*m/l,50,90)
+
  game_draw()
+ 
 end
 
 
@@ -60,7 +39,8 @@ end
 
 
 
-function gameinit()
+function game_init()
+
 	playerx=64
 	playery=64
 	speedx=8
@@ -74,53 +54,59 @@ function gameinit()
 	doorv=0
 	timer=0
 	shrt=0
+	fadet=0
+	bullets = { }
+	
 end
 
-function move()
+function game_update()
 
-	if btnp(⬆️,0) then
-		if cwallup() == false then
-			playery-=speedy
-			cy-=speedy
-			my-=speedy
-		elseif cwallup() == true and btnp(⬆️,0) then
-			sfx(0)
-		end
-	end
-	
-	if btnp(⬇️,0) then
-		if cwalldown() == false then
-		 playery+=speedy
-		 cy+=speedy
-		 my+=speedy
-		elseif cwalldown() == true and btnp(⬇️,0) then
-			sfx(0)
-		end
-	end
-	
-	if btnp(⬅️,0) then
-		if cwallleft() == false then
-			playerx-=speedx
-			cx-=speedx
-			mx-=speedx
-		elseif cwallleft() == true and btnp(⬅️,0) then
-			sfx(0)
-		end
-	end
-	
-	if btnp(➡️,0) then
-		if cwallright() == false then
-			playerx+=speedx
-			cx+=speedx
-			mx+=speedx
-		elseif cwallright() == true and btnp(➡️,0) then
-			sfx(0)
-		end
-	end
+ move()
+ camera(cx,cy)
+ mousex=stat(32)
+	mousey=stat(33)
+	q=(mousey+my-playery)	--delta y
+ m=(mousex+mx-playerx) --delta x
+ l=sqrt(q^2+m^2) -- length of
+ 
+ for b in all(bullets) do
+  b.x+=b.dx
+  b.y+=b.dy
+ end
+ 
+ if stat(34) == 1 and shrt == 1 then
+ 	 fire() 
+ 		shrt=0
+ 		drawbullets()
+ end
+ 
 end
 
---
---
+function game_draw()
+	cls()
+ pal(13,128,1)
+ pal(14,140,1)
+ map(0,0,0,0,128,64)
+ drawdoor()
+ print(playerx.."/"..playery,cx,cy,7)
+ print(stat(32).."/"..stat(33),cx,cy+8,7)
+ spr(39,mousex+mx,mousey+my)
+ line(playerx+4,playery+4,mousex+mx+4,mousey+my+4,7)
+ print(timer,cx,cy+16,7)
+ print(timer,cx,cy+24,7)
+ drawsht()
+	 
+
+	
+end
+
+function drawbullets()
+
+	for b in all(bullets) do 
+  spr(b.sp,b.x,b.y)
+ end
+ 
+end
 
 
 -->8
@@ -278,6 +264,7 @@ end
 
 function doorsound()
 	if timer%10 == 0 then
+		
 		sfx(0)
 	end
 end
@@ -303,30 +290,57 @@ end
 
  
 -->8
---game
-function game_init()
+--
 
-end
+function move()
 
-function game_update()
- for b in all(bullets) do
-  b.x+=b.dx
-  b.y+=b.dy
- end
- 
- if stat(34) == 1 and shrt >= 10 then
- 	 fire() 
- 		shrt=0
- end
- 
-end
-
-function game_draw()
-	 
-	for b in all(bullets) do 
-  spr(b.sp,b.x,b.y)
- end
+	if btnp(⬆️,0) then
+		if cwallup() == false then
+			playery-=speedy
+			cy-=speedy
+			my-=speedy
+		elseif cwallup() == true and btnp(⬆️,0) then
+			sfx(0)
+		end
+	end
 	
+	if btnp(⬇️,0) then
+		if cwalldown() == false then
+		 playery+=speedy
+		 cy+=speedy
+		 my+=speedy
+		elseif cwalldown() == true and btnp(⬇️,0) then
+			sfx(0)
+		end
+	end
+	
+	if btnp(⬅️,0) then
+		if cwallleft() == false then
+			playerx-=speedx
+			cx-=speedx
+			mx-=speedx
+		elseif cwallleft() == true and btnp(⬅️,0) then
+			sfx(0)
+		end
+	end
+	
+	if btnp(➡️,0) then
+		if cwallright() == false then
+			playerx+=speedx
+			cx+=speedx
+			mx+=speedx
+		elseif cwallright() == true and btnp(➡️,0) then
+			sfx(0)
+		end
+	end
+end
+
+
+function fade()
+	if fadet >= 30 then
+		del(bullet,b)
+		shrt=1
+	end
 end
 __gfx__
 00000000444444444544444444444454555555555555555577766677000000000000000000000000000000000000000000000000000000000000000000000000
@@ -345,14 +359,14 @@ __gfx__
 8868886844a555a444455544444444a44a444444b3bbbbbb00800800000000000000000000000000000000000000000000000000000000000000000000000000
 6666666644455544444555444444444444444444bbbb3bb308000080000000000000000000000000000000000000000000000000000000000000000000000000
 6888688844455544444555444444444444444444bb3bbb3b80000008000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000033300000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000003333300aa00aa00000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000fff000a0000a00000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000a99800000011110000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000111101000000000000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000008f51115f0a0000a00000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000005888050aa00aa00000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000005080800000000000000000000000000000000000000000000000000000000000000000000000000
+00555500009999000000000000000000eeee00000000000000033300000000000000000000000000000000000000000000000000000000000000000000000000
+00f4f40000ffff000000000000000000efff000000000000003333300aa00aa00000000000000000000000000000000000000000000000000000000000000000
+00ffef0000cffc0000000000000000003333055800000000000fff000a0000a00000000000000000000000000000000000000000000000000000000000000000
+0f7ff7f000ffff000000000000000000edeeee580000000000011110000000000000000000000000000000000000000000000000000000000000000000000000
+ff7777ff000ee0000000000000000000eddeee000000088085111151000000000000000000000000000000000000000000000000000000000000000000000000
+fff77fff00eeee000000000000000000dedd0000000000008f51115f0a0000a00000000000000000000000000000000000000000000000000000000000000000
+0ffccff00f0dd0f00000000000000000eded000000000000005888050aa00aa00000000000000000000000000000000000000000000000000000000000000000
+0cc00cc000d00d000000000000000000e00e00000000000005080800000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
