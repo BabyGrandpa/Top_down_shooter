@@ -11,7 +11,7 @@ function _init()
  
 end
 
-function _update()
+function _update60()
 
 	game_update()
 	timer+=1
@@ -108,13 +108,6 @@ function drawbullets()
  
 end
 
-function drawswat()
-
-	for s in all(swat) do
-		spr(s.sp,s.x,s.y)
-	end
-	
-end
 -->8
 --colition
 --
@@ -286,6 +279,14 @@ function doorsound()
 		
 		sfx(0)
 	end
+end
+
+function drawswat()
+	
+	for s in all(swat) do
+		spr(s.sp,s.x,s.y)
+	end
+	
 end
 -->8
 -- arrays
