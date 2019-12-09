@@ -21,6 +21,7 @@ function _update()
 	mousey=stat(33)
 	timer+=1
 	game_update()
+	bullet_update()
 	cbullet()
 	fade3()
 	fade2()
@@ -70,6 +71,8 @@ function gameinit()
 	shrt=0
 	fadet=100
 	bullets = { }
+	
+	
 end
 
 function move()
@@ -223,6 +226,21 @@ function cdoorontop()
 		return false
 	end
 end
+
+function cbullet()
+
+	for b in all(bullets) do
+		bulletx=(dx+b.x)/8
+		bullety=(dy+b.y)/8
+	
+		if fget(mget(bulletx,bullety),0) then
+ 		del(bullets,b)
+ 	end
+		
+	end
+end
+
+
 -->8
 function drawdoor()
 
@@ -285,17 +303,27 @@ function fire()
 		sp = 37,
 		x = playerx,
 		y = playery,
-	
- 	
-	 dx=3*m/l,	--dirx
+		dx=3*m/l,	--dirx
 	 dy=3*q/l --diry
-	}
+ }
 	
 	add(bullets,b)
 	
 end
 
- 
+function bullet_update()
+
+		q=(mousey+my-playery)	--delta y
+	 m=(mousex+mx-playerx) --delta x
+	 l=sqrt(q^2+m^2) -- length of dist(player;mouse)
+	 dx=3*m/l	--dirx
+	 dy=3*q/l --diry
+	
+end
+
+
+
+
 -->8
 --game
 function game_init()
@@ -308,15 +336,14 @@ function game_update()
   b.y+=b.dy
  end
  
- if stat(34) == 1 and shrt == 1 then
+ 
+ if stat(34) == 1  then
  	 fire() 
  		shrt=0
  		fadet=0
+ 		sfx(1)
  end
  
-  q=(mousey+my-playery)	--delta y
-	 m=(mousex+mx-playerx) --delta x
-	 l=sqrt(q^2+m^2) -- length of dist(player;mouse)
 end
 
 function game_draw()
@@ -329,7 +356,7 @@ end
 
 function test1()
 	for b in all(bullets) do
-	 spr(53,b.dx,b.dy)
+	 spr(53,b.x,b.y)
 	end
 end
 
@@ -345,19 +372,6 @@ function fade2()
   	del(bullets,b)
  	end
 		shrt=1
-	end
-end
-
-function cbullet()
-	for b in all(bullets) do
-		aimx=(b.q)	
-		aimy=(b.m)
-	
-		if fget(mget(aimx,aimy),1) then
-			return true
-		else 
-			return false
-		end
 	end
 end
 
@@ -536,3 +550,4 @@ __map__
 1515100101010101010101010101010101010101010101010101010110010101010101010101010101010101011015151515151516151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515
 __sfx__
 000100000d0700d0500d0500b0500b0500b0500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+001000003335000300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
