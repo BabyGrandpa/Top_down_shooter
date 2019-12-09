@@ -67,6 +67,11 @@ function game_update()
  go_swat()
  swat_shoot()
  
+ for sb in all(s_bullet) do
+ 	sb.x+=sb.dx
+ 	sb.y+=sb.dy
+ end
+ 
  for b in all(bullets) do
   b.x+=b.dx
   b.y+=b.dy
@@ -170,8 +175,8 @@ end
 function cbullet()
 
  for b in all(bullets) do
-  bulletx=(dx+b.x)/8
-  bullety=(dy+b.y)/8
+  bulletx=(b.dx+b.x)/8
+  bullety=(b.dy+b.y)/8
 
   if fget(mget(bulletx,bullety),0) then
    del(bullets,b)
@@ -256,8 +261,12 @@ function bullet_update()
  q=(mousey+my-playery)    --delta y
  m=(mousex+mx-playerx) --delta x
  l=sqrt(q^2+m^2) -- length of dist(player;mouse)
- dx=3*m/l --dirx
- dy=3*q/l --diry
+
+	for s in all(swat) do
+		s_q = (playery-s.y)
+		s_m = (playerx-s.x)
+		s_l = sqrt(s_q^2+s_m^2)
+	end
 
 end
 
@@ -281,7 +290,13 @@ function swat_fire()
 		local	sb = {     
 			sp = 36,
 			x = s.x,
-			y = s.y
+			y = s.y,
+			
+			s_q = (playery-s.y),
+			s_m = (playerx-s.x),
+			s_l = sqrt(s_q^2+s_m^2),
+			dx=3*s_m/s_l,
+			dy=3*s_q/s_l
 		}
 	
 		add(s_bullet,sb)
@@ -362,8 +377,9 @@ function go_swat()
 end
 
 function swat_shoot()
-
+ if timer% 10 == 0 then
 		swat_fire()
+	end
 
 end
 
